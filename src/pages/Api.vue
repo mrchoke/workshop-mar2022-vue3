@@ -10,7 +10,7 @@ export default {
     };
   },
   methods: {
-    async fetchCountries(q) {
+    async fetchCountries() {
       if (this.q.length < 2) return;
 
       clearTimeout(this.timeout);
@@ -18,7 +18,7 @@ export default {
       this.countries = [];
 
       this.timeout = setTimeout(async () => {
-        const response = await fetch(`https://restcountries.com/v3.1/name/${q}`);
+        const response = await fetch(`https://restcountries.com/v3.1/name/${this.q}`);
         const json = await response.json();
         this.countries = json;
         this.working = false;
@@ -34,7 +34,7 @@ export default {
   },
   watch: {
     q(v) {
-      this.fetchCountries(v);
+      if (v) this.fetchCountries();
     },
   },
 };
