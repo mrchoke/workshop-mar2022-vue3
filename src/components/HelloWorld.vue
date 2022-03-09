@@ -1,60 +1,36 @@
-<script>
+<script setup>
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 
-export default {
-  props: {
-    msg: String,
-    subtitle: String,
-  },
-  emits: ["name_changed"],
+defineProps({
+  msg: String,
+  subtitle: String,
+});
+const emits = defineEmits(["name_changed"]);
 
-  setup(_, { emit }) {
-    const count = ref(0);
-    const name_input = ref("");
-    const name_count = computed(
-      () => `${name_input.value}  length = ${name_input.value.length}`
-    );
+const count = ref(0);
+const name_input = ref("");
+const name_count = computed(
+  () => `${name_input.value}  length = ${name_input.value.length}`
+);
 
-    const increment = () => {
-      count.value++;
-    };
-
-    const reset_count = () => {
-      count.value = 0;
-    };
-
-    onMounted(() => console.log("setup mounted!!"));
-    onBeforeMount(() => {
-      console.log("setup beforeMount!!");
-    });
-
-    watch(name_input, (new_value, old_value) => {
-      emit("name_changed", new_value);
-      console.log(`Watch: name_input changed from ${old_value} to ${new_value}`);
-    });
-    console.log("setup !!");
-    return {
-      count,
-      name_input,
-      name_count,
-      increment,
-      reset_count,
-    };
-  },
-
-  beforeCreate() {
-    console.log("before create!!");
-  },
-  created() {
-    console.log("created!!");
-  },
-  beforeMount() {
-    console.log("before mount!!");
-  },
-  mounted() {
-    console.log("mounted!!");
-  },
+const increment = () => {
+  count.value++;
 };
+
+const reset_count = () => {
+  count.value = 0;
+};
+
+onMounted(() => console.log("setup mounted!!"));
+onBeforeMount(() => {
+  console.log("setup beforeMount!!");
+});
+
+watch(name_input, (new_value, old_value) => {
+  emits("name_changed", new_value);
+  console.log(`Watch: name_input changed from ${old_value} to ${new_value}`);
+});
+console.log("setup !!");
 </script>
 
 <template>

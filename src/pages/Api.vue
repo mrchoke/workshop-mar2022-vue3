@@ -1,50 +1,37 @@
-<script>
+<script setup>
 import { ref, watch } from "vue";
 
-export default {
-  name: "Api",
-  setup() {
-    const q = ref("");
-    const countries = ref([]);
-    const working = ref(false);
-    const timeout = ref(0);
+const q = ref("");
+const countries = ref([]);
+const working = ref(false);
+const timeout = ref(0);
 
-    const fetchCountries = async () => {
-      if (q.value.length < 2) return;
+const fetchCountries = async () => {
+  if (q.value.length < 2) return;
 
-      clearTimeout(timeout.value);
-      working.value = true;
-      countries.value = [];
+  clearTimeout(timeout.value);
+  working.value = true;
+  countries.value = [];
 
-      timeout.value = setTimeout(async () => {
-        const response = await fetch(`https://restcountries.com/v3.1/name/${q.value}`);
-        const json = await response.json();
-        countries.value = json;
-        working.value = false;
-      }, 700);
-    };
-
-    const native_name = (name) => {
-      for (let key in name) {
-        if (key !== "eng") {
-          return name[key].common;
-        }
-      }
-    };
-
-    watch(q, (v) => {
-      if (v) fetchCountries();
-    });
-    return {
-      countries,
-      q,
-      working,
-      timeout,
-      fetchCountries,
-      native_name,
-    };
-  },
+  timeout.value = setTimeout(async () => {
+    const response = await fetch(`https://restcountries.com/v3.1/name/${q.value}`);
+    const json = await response.json();
+    countries.value = json;
+    working.value = false;
+  }, 700);
 };
+
+const native_name = (name) => {
+  for (let key in name) {
+    if (key !== "eng") {
+      return name[key].common;
+    }
+  }
+};
+
+watch(q, (v) => {
+  if (v) fetchCountries();
+});
 </script>
 <template>
   <h1>Fetch API</h1>
