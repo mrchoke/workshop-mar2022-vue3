@@ -6,10 +6,10 @@ export default {
   components: {
     HelloWorld,
   },
-  data() {
+  setup() {
     return {
       msg: "Hello Vue 3 + Vite",
-      subtitle: "Options API",
+      subtitle: "Composition API",
     };
   },
   methods: {

@@ -1,29 +1,47 @@
 <script>
+import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
+
 export default {
   props: {
     msg: String,
     subtitle: String,
   },
   emits: ["name_changed"],
-  data() {
+
+  setup(_, { emit }) {
+    const count = ref(0);
+    const name_input = ref("");
+    const name_count = computed(
+      () => `${name_input.value}  length = ${name_input.value.length}`
+    );
+
+    const increment = () => {
+      count.value++;
+    };
+
+    const reset_count = () => {
+      count.value = 0;
+    };
+
+    onMounted(() => console.log("setup mounted!!"));
+    onBeforeMount(() => {
+      console.log("setup beforeMount!!");
+    });
+
+    watch(name_input, (new_value, old_value) => {
+      emit("name_changed", new_value);
+      console.log(`Watch: name_input changed from ${old_value} to ${new_value}`);
+    });
+    console.log("setup !!");
     return {
-      count: 0,
-      name_input: "",
+      count,
+      name_input,
+      name_count,
+      increment,
+      reset_count,
     };
   },
-  computed: {
-    name_count() {
-      return `${this.name_input}  length = ${this.name_input.length}`;
-    },
-  },
-  methods: {
-    increment() {
-      this.count++;
-    },
-    reset_count() {
-      this.count = 0;
-    },
-  },
+
   beforeCreate() {
     console.log("before create!!");
   },
@@ -35,12 +53,6 @@ export default {
   },
   mounted() {
     console.log("mounted!!");
-  },
-  watch: {
-    name_input(new_value, old_value) {
-      this.$emit("name_changed", new_value);
-      console.log(`Watch: name_input changed from ${old_value} to ${new_value}`);
-    },
   },
 };
 </script>

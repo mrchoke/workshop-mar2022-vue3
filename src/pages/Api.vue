@@ -1,41 +1,48 @@
 <script>
+import { ref, watch } from "vue";
+
 export default {
   name: "Api",
-  data() {
-    return {
-      countries: [],
-      q: "",
-      working: false,
-      timeout: null,
-    };
-  },
-  methods: {
-    async fetchCountries(q) {
-      if (this.q.length < 2) return;
+  setup() {
+    const q = ref("");
+    const countries = ref([]);
+    const working = ref(false);
+    const timeout = ref(0);
 
-      clearTimeout(this.timeout);
-      this.working = true;
-      this.countries = [];
+    const fetchCountries = async () => {
+      if (q.value.length < 2) return;
 
-      this.timeout = setTimeout(async () => {
-        const response = await fetch(`https://restcountries.com/v3.1/name/${q}`);
+      clearTimeout(timeout.value);
+      working.value = true;
+      countries.value = [];
+
+      timeout.value = setTimeout(async () => {
+        const response = await fetch(`https://restcountries.com/v3.1/name/${q.value}`);
         const json = await response.json();
-        this.countries = json;
-        this.working = false;
+        countries.value = json;
+        working.value = false;
       }, 700);
-    },
-    native_name(name) {
+    };
+
+    const native_name = (name) => {
       for (let key in name) {
         if (key !== "eng") {
           return name[key].common;
         }
       }
-    },
-  },
-  watch: {
-    q(v) {
-      this.fetchCountries(v);
-    },
+    };
+
+    watch(q, (v) => {
+      if (v) fetchCountries();
+    });
+    return {
+      countries,
+      q,
+      working,
+      timeout,
+      fetchCountries,
+      native_name,
+    };
   },
 };
 </script>
