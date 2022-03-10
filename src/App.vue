@@ -2,7 +2,7 @@
   <div>
     <router-link :to="{ name: 'Home' }" class="link"> Home </router-link>
     |
-    <router-link :to="{ name: 'Api' }" class="link"> API </router-link>
+    <router-link :to="{ name: 'Countries' }" class="link"> Countries </router-link>
     <hr />
   </div>
   <div>
